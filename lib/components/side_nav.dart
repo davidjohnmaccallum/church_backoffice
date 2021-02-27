@@ -26,22 +26,24 @@ class SideNav extends StatelessWidget {
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
       width: expanded ? 200 : 40,
-      child: Column(
-        children: [
-          ...navItems
-              .map((it) => buildNavItemWidget(
-                    navItem: it,
-                    selected: it.text == selectedNavItem,
-                  ))
-              .toList(),
-          Spacer(),
-          IconButton(
-            icon: Icon(expanded ? Icons.chevron_left : Icons.chevron_right),
-            onPressed: () {
-              if (onExpand != null) onExpand(expanded);
-            },
-          ),
-        ],
+      child: ClipRect(
+        child: Column(
+          children: [
+            ...navItems
+                .map((it) => buildNavItemWidget(
+                      navItem: it,
+                      selected: it.text == selectedNavItem,
+                    ))
+                .toList(),
+            Spacer(),
+            IconButton(
+              icon: Icon(expanded ? Icons.chevron_left : Icons.chevron_right),
+              onPressed: () {
+                if (onExpand != null) onExpand(expanded);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
