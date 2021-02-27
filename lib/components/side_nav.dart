@@ -23,7 +23,8 @@ class SideNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 200),
       width: expanded ? 200 : 40,
       child: Column(
         children: [
