@@ -1,3 +1,5 @@
+import 'package:church_backoffice/screens/login.dart';
+import 'package:church_backoffice/screens/register.dart';
 import 'package:flutter/material.dart';
 
 import 'components/layout.dart';
@@ -15,6 +17,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: Layout());
+        home: LoginScreen());
   }
 }
