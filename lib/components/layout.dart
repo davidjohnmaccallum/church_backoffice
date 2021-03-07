@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'avatar_menu.dart';
@@ -6,7 +7,14 @@ import 'section.dart';
 import 'side_nav.dart';
 
 class Layout extends StatefulWidget {
-  Layout({Key key}) : super(key: key);
+  final onProfilePressed;
+  final onLogoutPressed;
+
+  Layout({
+    Key key,
+    this.onProfilePressed,
+    this.onLogoutPressed,
+  }) : super(key: key);
 
   @override
   _LayoutState createState() => _LayoutState();
@@ -15,6 +23,22 @@ class Layout extends StatefulWidget {
 class _LayoutState extends State<Layout> {
   bool isSideNavExpanded = true;
   bool isAvatarMenuShowing = false;
+  User user;
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.authStateChanges().listen((User user) {
+      setState(() {
+        this.user = user;
+      });
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print("User is signed in! $user");
+      }
+    });
+    super.initState();
+  }
 
   onExpandSideNav(bool expanded) {
     setState(() {
@@ -64,6 +88,7 @@ class _LayoutState extends State<Layout> {
                 Material(
                   elevation: 1.0,
                   child: Header(
+                    user: user,
                     onAvatarTap: onAvatarTap,
                   ),
                 ),
@@ -74,8 +99,8 @@ class _LayoutState extends State<Layout> {
               ? AvatarMenu(
                   onClose: onAvatarTap,
                   menuItems: [
-                    AvatarMenuItem("Profile", () => null),
-                    AvatarMenuItem("Logout", () => null),
+                    AvatarMenuItem("Profile", widget.onProfilePressed),
+                    AvatarMenuItem("Logout", widget.onLogoutPressed),
                   ],
                 )
               : Container(),

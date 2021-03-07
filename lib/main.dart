@@ -24,6 +24,8 @@ class _AppState extends State<App> {
   bool _initialized = false;
   bool _error = false;
   User _user;
+  String _registrationErrorMessage;
+  String _loginErrorMessage;
 
   // Define an async function to initialize FlutterFire
   void initializeFlutterFire() async {
@@ -42,7 +44,7 @@ class _AppState extends State<App> {
         if (user == null) {
           print('User is currently signed out!');
         } else {
-          print('User is signed in!');
+          print("User is signed in! $user");
         }
       });
     } catch (e) {
@@ -70,8 +72,44 @@ class _AppState extends State<App> {
     );
   }
 
-  submitRegistrationForm(RegistrationData data) {
-    // TODO: Integrate backend
+  submitRegistrationForm(RegistrationData data) async {
+    try {
+      setState(() {
+        _registrationErrorMessage = null;
+      });
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: data.email,
+        password: data.password,
+      );
+    } catch (e) {
+      setState(() {
+        _registrationErrorMessage = e.message;
+      });
+    }
+  }
+
+  login(String email, String password) async {
+    try {
+      setState(() {
+        _loginErrorMessage = null;
+      });
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      setState(() {
+        _loginErrorMessage = e.message;
+      });
+    }
+  }
+
+  logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget getHome() {
@@ -95,11 +133,19 @@ class _AppState extends State<App> {
 
     if (_user == null) {
       return LoginScreen(
+        onLoginPressed: login,
         onRegisterPressed: openRegisterScreen,
+        errorMessage: _loginErrorMessage,
       );
+      // return RegistrationForm(
+      //   onRegisterPressed: submitRegistrationForm,
+      //   errorMessage: _registrationErrorMessage,
+      // );
     }
 
-    return Layout();
+    return Layout(
+      onLogoutPressed: logout,
+    );
   }
 
   @override

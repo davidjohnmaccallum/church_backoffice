@@ -1,11 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
   final Function onAvatarTap;
+  final User user;
 
   const Header({
     Key key,
     this.onAvatarTap,
+    this.user,
   }) : super(key: key);
 
   @override

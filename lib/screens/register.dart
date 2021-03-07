@@ -3,8 +3,13 @@ import 'package:email_validator/email_validator.dart';
 
 class RegistrationForm extends StatefulWidget {
   final void Function(RegistrationData) onRegisterPressed;
+  final String errorMessage;
 
-  RegistrationForm({Key key, this.onRegisterPressed}) : super(key: key);
+  RegistrationForm({
+    Key key,
+    this.onRegisterPressed,
+    this.errorMessage,
+  }) : super(key: key);
 
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
@@ -33,6 +38,18 @@ class _RegistrationFormState extends State<RegistrationForm> {
               width: 300,
               child: Column(
                 children: [
+                  widget.errorMessage != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            widget.errorMessage,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : Container(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
@@ -114,16 +131,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
-
                             _formKey.currentState.save();
                             if (widget.onRegisterPressed == null) return;
                             widget.onRegisterPressed(_data);
                           }
-
-                          // if (widget.onRegisterPressed == null) return;
-                          // widget.onRegisterPressed(context);
                         },
                         child: Text("Register"),
                       ),
