@@ -77,10 +77,11 @@ class _AppState extends State<App> {
       setState(() {
         _registrationErrorMessage = null;
       });
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      var userCred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: data.email,
         password: data.password,
       );
+      await userCred.user.sendEmailVerification();
     } catch (e) {
       setState(() {
         _registrationErrorMessage = e.message;
