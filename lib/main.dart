@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'components/layout.dart';
+import 'components/section.dart';
+import 'components/side_nav.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -146,6 +148,10 @@ class _AppState extends State<App> {
 
     return Layout(
       onLogoutPressed: logout,
+      sideNavItems: [
+        NavItem("Sermons", Icon(Icons.plus_one), () => {}),
+      ],
+      content: Section(),
     );
   }
 

@@ -9,11 +9,15 @@ import 'side_nav.dart';
 class Layout extends StatefulWidget {
   final onProfilePressed;
   final onLogoutPressed;
+  final List<NavItem> sideNavItems;
+  final Widget content;
 
   Layout({
     Key key,
     this.onProfilePressed,
     this.onLogoutPressed,
+    this.sideNavItems,
+    this.content,
   }) : super(key: key);
 
   @override
@@ -24,6 +28,7 @@ class _LayoutState extends State<Layout> {
   bool isSideNavExpanded = true;
   bool isAvatarMenuShowing = false;
   User user;
+  String selectedSideNavItem;
 
   @override
   void initState() {
@@ -66,20 +71,15 @@ class _LayoutState extends State<Layout> {
                     textDirection: TextDirection.rtl,
                     children: [
                       Expanded(
-                        child: Section(),
+                        child: widget.content ?? Container(),
                       ),
                       Material(
                         elevation: 3,
                         child: SideNav(
                           expanded: isSideNavExpanded,
                           onExpand: onExpandSideNav,
-                          selectedNavItem: "Item 2",
-                          navItems: [
-                            NavItem("Item 1", Icon(Icons.plus_one), () => {}),
-                            NavItem("Item 2", Icon(Icons.plus_one), () => {}),
-                            NavItem("Item 3", Icon(Icons.plus_one), () => {}),
-                            NavItem("Item 4", Icon(Icons.plus_one), () => {}),
-                          ],
+                          selectedNavItem: selectedSideNavItem,
+                          navItems: widget.sideNavItems ?? [],
                         ),
                       ),
                     ],
