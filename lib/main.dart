@@ -151,7 +151,34 @@ class _AppState extends State<App> {
       sideNavItems: [
         NavItem("Sermons", Icon(Icons.plus_one), () => {}),
       ],
-      content: Section(),
+      content: Section(
+        title: "Sermons",
+        actions: [
+          IconButton(icon: Icon(Icons.create), onPressed: () => {}),
+          IconButton(icon: Icon(Icons.update), onPressed: () => {}),
+          IconButton(icon: Icon(Icons.delete), onPressed: () => {}),
+        ],
+        content: ListView(
+          children: [
+            ListTile(
+              title: Text("Aaa"),
+              trailing: IconButton(
+                icon: Icon(Icons.play_arrow),
+                onPressed: () => {},
+              ),
+              onTap: () => {},
+            ),
+            ListTile(
+              title: Text("Aaa"),
+              trailing: IconButton(
+                icon: Icon(Icons.play_arrow),
+                onPressed: () => {},
+              ),
+              onTap: () => {},
+            ),
+          ],
+        ),
+      ),
     );
   }
 

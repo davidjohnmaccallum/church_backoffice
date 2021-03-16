@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class SectionHeader extends StatelessWidget {
   final List<Widget> actions;
+  final String title;
 
   const SectionHeader({
     Key key,
     this.actions = const [],
+    this.title,
   }) : super(key: key);
 
   @override
@@ -17,7 +19,7 @@ class SectionHeader extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8.0),
           child: Row(
             children: [
-              Text("Section Title",
+              Text(title ?? "",
                   style: TextStyle(
                     fontSize: 20,
                   )),

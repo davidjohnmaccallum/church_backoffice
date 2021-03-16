@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 import 'section_header.dart';
 
 class Section extends StatelessWidget {
+  final List<Widget> actions;
+  final Widget content;
+  final String title;
+
   const Section({
     Key key,
+    this.actions,
+    this.content,
+    this.title,
   }) : super(key: key);
 
   @override
@@ -14,15 +21,12 @@ class Section extends StatelessWidget {
         Material(
           elevation: 1.0,
           child: SectionHeader(
-            actions: [
-              IconButton(icon: Icon(Icons.create), onPressed: () => {}),
-              IconButton(icon: Icon(Icons.update), onPressed: () => {}),
-              IconButton(icon: Icon(Icons.delete), onPressed: () => {}),
-            ],
+            title: title,
+            actions: actions ?? [],
           ),
         ),
         Expanded(
-          child: Container(),
+          child: content ?? Container(),
         ),
       ],
     );
