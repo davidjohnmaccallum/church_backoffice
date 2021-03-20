@@ -1,5 +1,6 @@
 import 'package:church_backoffice/screens/login.dart';
 import 'package:church_backoffice/screens/register.dart';
+import 'package:church_backoffice/screens/sermons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -148,52 +149,7 @@ class _AppState extends State<App> {
       sideNavItems: [
         NavItem("Sermons", Icon(Icons.plus_one), () => {}),
       ],
-      content: getSermonsScreen(),
-    );
-  }
-
-  void onSermonTap(id, context) {}
-
-  Widget getSermonsScreen() {
-    CollectionReference sermons = FirebaseFirestore.instance.collection('sermons');
-
-    return StreamBuilder<QuerySnapshot>(
-      stream: sermons.snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ' + snapshot.error.toString()),
-          );
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: Text('Loading'));
-        }
-
-        return Section(
-          title: "Sermons",
-          actions: [
-            IconButton(icon: Icon(Icons.create), onPressed: () => {}),
-            IconButton(icon: Icon(Icons.update), onPressed: () => {}),
-            IconButton(icon: Icon(Icons.delete), onPressed: () => {}),
-          ],
-          content: ListView(
-              children: snapshot.data.docs
-                  .map(
-                    (it) => ListTile(
-                      leading: FadeInImage(
-                        placeholder: AssetImage("assets/images/thumbnail_placeholder.png"),
-                        image: NetworkImage(it.data()['thumbnailUrl']),
-                      ),
-                      title: Text(it.data()['title']),
-                      subtitle: Text(it.data()['author']),
-                      trailing: Icon(Icons.play_arrow),
-                      onTap: () => onSermonTap(it.id, context),
-                    ),
-                  )
-                  .toList()),
-        );
-      },
+      content: SermonsScreen(),
     );
   }
 
