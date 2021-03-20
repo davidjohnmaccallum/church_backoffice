@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'avatar_menu.dart';
 import 'header.dart';
-import 'section.dart';
 import 'side_nav.dart';
 
 class Layout extends StatefulWidget {
@@ -29,6 +29,7 @@ class _LayoutState extends State<Layout> {
   bool isAvatarMenuShowing = false;
   User user;
   String selectedSideNavItem;
+  SharedPreferences prefs;
 
   @override
   void initState() {
@@ -42,6 +43,14 @@ class _LayoutState extends State<Layout> {
         print("User is signed in! $user");
       }
     });
+
+    SharedPreferences.getInstance().then((prefs) {
+      this.prefs = prefs;
+      setState(() {
+        isSideNavExpanded = prefs.getBool("side_nav_expanded") ?? true;
+      });
+    });
+
     super.initState();
   }
 
@@ -49,6 +58,9 @@ class _LayoutState extends State<Layout> {
     setState(() {
       isSideNavExpanded = !expanded;
     });
+    if (prefs != null) {
+      prefs.setBool("side_nav_expanded", !expanded);
+    }
   }
 
   onAvatarTap() {

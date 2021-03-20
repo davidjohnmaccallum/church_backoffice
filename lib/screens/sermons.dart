@@ -32,20 +32,23 @@ class SermonsScreen extends StatelessWidget {
             IconButton(icon: Icon(Icons.delete), onPressed: () => {}),
           ],
           content: ListView(
-              children: snapshot.data.docs
-                  .map(
-                    (it) => ListTile(
+            children: snapshot.data.docs
+                .map((it) => ListTile(
                       leading: FadeInImage(
-                        placeholder: AssetImage("assets/images/thumbnail_placeholder.png"),
-                        image: NetworkImage(it.data()['thumbnailUrl']),
+                        placeholder: AssetImage(
+                          "assets/images/thumbnail_placeholder.png",
+                        ),
+                        image: NetworkImage(
+                          it.data()['thumbnailUrl'],
+                        ),
                       ),
                       title: Text(it.data()['title']),
                       subtitle: Text(it.data()['author']),
                       trailing: Icon(Icons.play_arrow),
                       onTap: () => onSermonTap(it.id, context),
-                    ),
-                  )
-                  .toList()),
+                    ))
+                .toList(),
+          ),
         );
       },
     );
