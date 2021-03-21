@@ -28,6 +28,14 @@ class _LoginScreenState extends State<LoginScreen> {
   String _email;
   String _password;
 
+  onSubmit() {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      if (widget.onLoginPressed == null) return;
+      widget.onLoginPressed(_email, _password);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -56,6 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Email address",
+                      ),
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Please enter your email address';
@@ -68,43 +80,35 @@ class _LoginScreenState extends State<LoginScreen> {
                       onSaved: (String value) {
                         _email = value;
                       },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Email address",
-                      ),
+                      onFieldSubmitted: (_) => onSubmit(),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Password",
+                      ),
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Please enter your password';
                         }
                         return null;
                       },
+                      obscureText: true,
                       onSaved: (String value) {
                         _password = value;
                       },
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Password",
-                      ),
+                      onFieldSubmitted: (_) => onSubmit(),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
                       width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            _formKey.currentState.save();
-                            if (widget.onLoginPressed == null) return;
-                            widget.onLoginPressed(_email, _password);
-                          }
-                        },
+                      child: ElevatedButton(
+                        onPressed: onSubmit,
                         child: Text("Login"),
                       ),
                     ),
