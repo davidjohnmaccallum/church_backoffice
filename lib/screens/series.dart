@@ -2,15 +2,14 @@ import 'package:church_backoffice/components/section.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class SermonsScreen extends StatelessWidget {
-  final Function(String) onRowTap;
-  final Function onAdd;
+class SeriesScreen extends StatelessWidget {
+  const SeriesScreen({Key key}) : super(key: key);
 
-  const SermonsScreen({Key key, this.onRowTap, this.onAdd}) : super(key: key);
+  void onRowTap(id, context) {}
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference collection = FirebaseFirestore.instance.collection('sermons');
+    CollectionReference collection = FirebaseFirestore.instance.collection('series');
 
     return StreamBuilder<QuerySnapshot>(
       stream: collection.snapshots(),
@@ -26,11 +25,11 @@ class SermonsScreen extends StatelessWidget {
         }
 
         return Section(
-          title: "Sermons",
+          title: "Series",
           actions: [
-            IconButton(icon: Icon(Icons.add), onPressed: onAdd),
-            IconButton(icon: Icon(Icons.edit), onPressed: () => {}),
-            IconButton(icon: Icon(Icons.delete), onPressed: null),
+            IconButton(icon: Icon(Icons.create), onPressed: () => {}),
+            IconButton(icon: Icon(Icons.update), onPressed: () => {}),
+            IconButton(icon: Icon(Icons.delete), onPressed: () => {}),
           ],
           content: ListView(
             children: snapshot.data.docs
@@ -40,13 +39,13 @@ class SermonsScreen extends StatelessWidget {
                           "assets/images/thumbnail_placeholder.png",
                         ),
                         image: NetworkImage(
-                          it.data()['thumbnailUrl'] ?? "",
+                          it.data()['thumbnailUrl'],
                         ),
                       ),
-                      title: Text(it.data()['title'] ?? ""),
-                      subtitle: Text(it.data()['author'] ?? ""),
+                      title: Text(it.data()['title']),
+                      subtitle: Text(it.data()['author']),
                       trailing: Icon(Icons.play_arrow),
-                      onTap: () => onRowTap(it.id),
+                      onTap: () => onRowTap(it.id, context),
                     ))
                 .toList(),
           ),

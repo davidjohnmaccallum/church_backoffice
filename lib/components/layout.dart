@@ -1,3 +1,4 @@
+import 'package:church_backoffice/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +12,7 @@ class Layout extends StatefulWidget {
   final onLogoutPressed;
   final List<NavItem> sideNavItems;
   final Widget content;
-  final String selectedSideNavItem;
+  final NavState selectedSideNavItem;
 
   Layout({
     Key key,
@@ -91,7 +92,7 @@ class _LayoutState extends State<Layout> {
                         child: SideNav(
                           expanded: isSideNavExpanded,
                           onExpand: onExpandSideNav,
-                          selectedNavItem: widget.selectedSideNavItem,
+                          selectedNavItem: widget.selectedSideNavItem.page,
                           navItems: widget.sideNavItems ?? [],
                         ),
                       ),

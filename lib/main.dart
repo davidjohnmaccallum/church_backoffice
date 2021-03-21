@@ -1,19 +1,27 @@
 import 'package:church_backoffice/screens/login.dart';
 import 'package:church_backoffice/screens/register.dart';
+import 'package:church_backoffice/screens/series.dart';
+import 'package:church_backoffice/screens/sermon_detail.dart';
+import 'package:church_backoffice/screens/sermon_form.dart';
 import 'package:church_backoffice/screens/sermons.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 
 import 'components/layout.dart';
-import 'components/section.dart';
 import 'components/side_nav.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
+}
+
+class NavState {
+  final String sideNavKey;
+  final String page;
+  final String id;
+  NavState(this.page, this.sideNavKey, {this.id});
 }
 
 class App extends StatefulWidget {
@@ -28,8 +36,9 @@ class _AppState extends State<App> {
   bool _initialized = false;
   bool _error = false;
   User _user;
-  String _registrationErrorMessage;
   String _loginErrorMessage;
+  String _registrationErrorMessage;
+  NavState navState = NavState("SermonList", "Sermons");
 
   // Define an async function to initialize FlutterFire
   void initializeFlutterFire() async {
@@ -146,11 +155,67 @@ class _AppState extends State<App> {
 
     return Layout(
       onLogoutPressed: logout,
+      selectedSideNavItem: navState,
       sideNavItems: [
-        NavItem("Sermons", Icon(Icons.plus_one), () => {}),
+        NavItem("Sermons", Icon(Icons.plus_one), () {
+          setState(() {
+            navState = NavState("SermonList", "Sermons");
+          });
+        }),
+        NavItem("Series", Icon(Icons.plus_one), () {
+          setState(() {
+            navState = NavState("SeriesList", "Series");
+          });
+        }),
       ],
-      content: SermonsScreen(),
+      content: getContent(),
     );
+  }
+
+  Widget getContent() {
+    switch (navState.page) {
+      case "SeriesList":
+        // return navState.id != null ? SeriesDetail(navState.id) : SeriesScreen();
+        return SeriesScreen();
+      // case "SeriesDetail":
+      //   return SeriesDetail(navState.id);
+      case "SermonList":
+        return SermonsScreen(
+          onAdd: () {
+            setState(() {
+              navState = NavState("SermonForm", "Sermons");
+            });
+          },
+          onRowTap: (String id) {
+            setState(() {
+              navState = NavState("SermonDetail", "Sermons", id: id);
+            });
+          },
+        );
+      case "SermonDetail":
+        return SermonDetail(
+          id: navState.id,
+          onEdit: (String id) {
+            setState(() {
+              navState = NavState("SermonForm", "Sermons", id: id);
+            });
+          },
+          onClose: () {
+            setState(() {
+              navState = NavState("SermonList", "Sermons");
+            });
+          },
+        );
+      case "SermonForm":
+        return SermonForm(
+          id: navState.id,
+          onClose: (String id) {
+            setState(() {
+              navState = id != null ? NavState("SermonDetail", "Sermons", id: id) : NavState("SermonList", "Sermons");
+            });
+          },
+        );
+    }
   }
 
   @override
