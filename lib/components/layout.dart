@@ -11,6 +11,7 @@ class Layout extends StatefulWidget {
   final onLogoutPressed;
   final List<NavItem> sideNavItems;
   final Widget content;
+  final String selectedSideNavItem;
 
   Layout({
     Key key,
@@ -18,6 +19,7 @@ class Layout extends StatefulWidget {
     this.onLogoutPressed,
     this.sideNavItems,
     this.content,
+    this.selectedSideNavItem,
   }) : super(key: key);
 
   @override
@@ -28,7 +30,6 @@ class _LayoutState extends State<Layout> {
   bool isSideNavExpanded = true;
   bool isAvatarMenuShowing = false;
   User user;
-  String selectedSideNavItem;
   SharedPreferences prefs;
 
   @override
@@ -90,7 +91,7 @@ class _LayoutState extends State<Layout> {
                         child: SideNav(
                           expanded: isSideNavExpanded,
                           onExpand: onExpandSideNav,
-                          selectedNavItem: selectedSideNavItem,
+                          selectedNavItem: widget.selectedSideNavItem,
                           navItems: widget.sideNavItems ?? [],
                         ),
                       ),
