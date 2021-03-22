@@ -38,7 +38,9 @@ class _AppState extends State<App> {
   User _user;
   String _loginErrorMessage;
   String _registrationErrorMessage;
-  NavState navState = NavState("SermonList", "Sermons");
+  // NavState navState = NavState("SermonList", "Sermons");
+  // NavState navState = NavState("SermonForm", "Sermons", id: "0SRgusYUdOiUADScBFnH");
+  NavState navState = NavState("SermonDetail", "Sermons", id: "0SRgusYUdOiUADScBFnH");
 
   // Define an async function to initialize FlutterFire
   void initializeFlutterFire() async {
@@ -173,6 +175,7 @@ class _AppState extends State<App> {
   }
 
   Widget getContent() {
+    print("${navState.page}/${navState.id}");
     switch (navState.page) {
       case "SeriesList":
         // return navState.id != null ? SeriesDetail(navState.id) : SeriesScreen();

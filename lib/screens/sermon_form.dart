@@ -2,6 +2,8 @@ import 'package:church_backoffice/components/section.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../utils.dart';
+
 class SermonForm extends StatefulWidget {
   final Function(String) onClose;
   final String id;
@@ -110,7 +112,7 @@ class _SermonFormState extends State<SermonForm> {
                       validator: notEmptyValidator,
                     ),
                     TextFormField(
-                      initialValue: record['_date'] != null ? record['_date'].toString() : "",
+                      initialValue: formatTimestamp(record['_date']),
                       decoration: InputDecoration(
                         labelText: 'Date',
                       ),
