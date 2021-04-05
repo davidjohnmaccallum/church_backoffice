@@ -25,7 +25,7 @@ class SeriesScreen extends StatelessWidget {
         }
 
         return Section(
-          title: "Series",
+          title: "Series.",
           actions: [
             IconButton(icon: Icon(Icons.create), onPressed: () => {}),
             IconButton(icon: Icon(Icons.update), onPressed: () => {}),
