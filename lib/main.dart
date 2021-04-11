@@ -82,12 +82,13 @@ class _AppState extends State<App> {
       MaterialPageRoute(
         builder: (context) => RegistrationForm(
           onRegisterPressed: submitRegistrationForm,
+          errorMessage: _registrationErrorMessage,
         ),
       ),
     );
   }
 
-  submitRegistrationForm(RegistrationData data) async {
+  submitRegistrationForm(RegistrationData data, BuildContext context) async {
     try {
       setState(() {
         _registrationErrorMessage = null;
@@ -97,6 +98,7 @@ class _AppState extends State<App> {
         password: data.password,
       );
       await userCred.user.sendEmailVerification();
+      Navigator.of(context).pop();
     } catch (e) {
       setState(() {
         _registrationErrorMessage = e.message;
@@ -104,7 +106,7 @@ class _AppState extends State<App> {
     }
   }
 
-  login(String email, String password) async {
+  onLoginPressed(String email, String password) async {
     try {
       setState(() {
         _loginErrorMessage = null;
@@ -113,6 +115,7 @@ class _AppState extends State<App> {
         email: email,
         password: password,
       );
+      // if successful will trigger listener above
     } catch (e) {
       setState(() {
         _loginErrorMessage = e.message;
@@ -120,7 +123,7 @@ class _AppState extends State<App> {
     }
   }
 
-  logout() async {
+  onLogoutPressed() async {
     try {
       await FirebaseAuth.instance.signOut();
     } catch (e) {
@@ -149,14 +152,14 @@ class _AppState extends State<App> {
 
     if (_user == null) {
       return LoginScreen(
-        onLoginPressed: login,
+        onLoginPressed: onLoginPressed,
         onRegisterPressed: openRegisterScreen,
         errorMessage: _loginErrorMessage,
       );
     }
 
     return Layout(
-      onLogoutPressed: logout,
+      onLogoutPressed: onLogoutPressed,
       selectedSideNavItem: navState,
       sideNavItems: [
         NavItem("Sermons", Icon(Icons.plus_one), () {

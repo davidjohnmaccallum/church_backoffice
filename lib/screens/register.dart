@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 
 class RegistrationForm extends StatefulWidget {
-  final void Function(RegistrationData) onRegisterPressed;
+  final void Function(RegistrationData, BuildContext) onRegisterPressed;
   final String errorMessage;
 
   RegistrationForm({
@@ -133,7 +133,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();
                             if (widget.onRegisterPressed == null) return;
-                            widget.onRegisterPressed(_data);
+                            widget.onRegisterPressed(_data, context);
                           }
                         },
                         child: Text("Register"),
