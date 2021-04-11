@@ -1,3 +1,5 @@
+import 'package:church_backoffice/screens/forgot_password.dart';
+import 'package:church_backoffice/screens/forgot_password_email_sent.dart';
 import 'package:church_backoffice/screens/login.dart';
 import 'package:church_backoffice/screens/register.dart';
 import 'package:church_backoffice/screens/series.dart';
@@ -38,6 +40,7 @@ class _AppState extends State<App> {
   User _user;
   String _loginErrorMessage;
   String _registrationErrorMessage;
+  String _passwordResetErrorMessage;
   // NavState navState = NavState("SermonList", "Sermons");
   // NavState navState = NavState("SermonForm", "Sermons", id: "0SRgusYUdOiUADScBFnH");
   NavState navState = NavState("SermonDetail", "Sermons", id: "0SRgusYUdOiUADScBFnH");
@@ -123,6 +126,43 @@ class _AppState extends State<App> {
     }
   }
 
+  onForgotEmailSentScreenClosePressed(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  onSendPasswordResetEmailPressed(String email, BuildContext context) async {
+    try {
+      setState(() {
+        _passwordResetErrorMessage = null;
+      });
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: email,
+      );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => ForgotEmailSentScreen(
+            onClosePressed: onForgotEmailSentScreenClosePressed,
+          ),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _loginErrorMessage = e.message;
+      });
+    }
+  }
+
+  onForgotPressed(BuildContext context) async {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ForgotPasswordForm(
+          onSendEmailPressed: onSendPasswordResetEmailPressed,
+          errorMessage: _registrationErrorMessage,
+        ),
+      ),
+    );
+  }
+
   onLogoutPressed() async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -153,6 +193,7 @@ class _AppState extends State<App> {
     if (_user == null) {
       return LoginScreen(
         onLoginPressed: onLoginPressed,
+        onForgotPressed: onForgotPressed,
         onRegisterPressed: openRegisterScreen,
         errorMessage: _loginErrorMessage,
       );
