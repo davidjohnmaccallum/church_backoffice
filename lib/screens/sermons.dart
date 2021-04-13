@@ -26,6 +26,7 @@ class SermonsScreen extends StatelessWidget {
         }
 
         return Section(
+          key: PageStorageKey<String>('Sermons'),
           title: "Sermons",
           actions: [
             IconButton(icon: Icon(Icons.add), onPressed: onAdd),

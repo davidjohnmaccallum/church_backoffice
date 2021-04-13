@@ -25,6 +25,7 @@ class SeriesScreen extends StatelessWidget {
         }
 
         return Section(
+          key: PageStorageKey<String>('Series'),
           title: "Series",
           actions: [
             IconButton(icon: Icon(Icons.create), onPressed: () => {}),
