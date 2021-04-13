@@ -1,6 +1,8 @@
 import 'package:church_backoffice/components/section.dart';
+import 'package:church_backoffice/models/Sermon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class SermonsScreen extends StatelessWidget {
   final Function(String) onRowTap;
@@ -10,18 +12,16 @@ class SermonsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference collection = FirebaseFirestore.instance.collection('sermons');
-
     return StreamBuilder<QuerySnapshot>(
-      stream: collection.snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
+      stream: Sermon.stream(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> query) {
+        if (query.hasError) {
           return Center(
-            child: Text('Error: ' + snapshot.error.toString()),
+            child: Text('Error: ' + query.error.toString()),
           );
         }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (query.connectionState == ConnectionState.waiting) {
           return Center(child: Text('Loading'));
         }
 
@@ -34,20 +34,17 @@ class SermonsScreen extends StatelessWidget {
             IconButton(icon: Icon(Icons.delete), onPressed: null),
           ],
           content: ListView(
-            children: snapshot.data.docs
-                .map((it) => ListTile(
-                      leading: FadeInImage(
-                        placeholder: AssetImage(
-                          "assets/images/thumbnail_placeholder.png",
-                        ),
-                        image: NetworkImage(
-                          it.data()['thumbnailUrl'] ?? "",
-                        ),
+            children: query.data.docs
+                .map(Sermon.map)
+                .map((data) => ListTile(
+                      leading: FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: data.thumbnailUrl ?? '',
                       ),
-                      title: Text(it.data()['title'] ?? ""),
-                      subtitle: Text(it.data()['author'] ?? ""),
+                      title: Text(data.title ?? ''),
+                      subtitle: Text(data.author ?? ''),
                       trailing: Icon(Icons.play_arrow),
-                      onTap: () => onRowTap(it.id),
+                      onTap: () => onRowTap(data.id),
                     ))
                 .toList(),
           ),
