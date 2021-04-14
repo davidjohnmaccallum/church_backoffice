@@ -35,7 +35,7 @@ class SermonsScreen extends StatelessWidget {
           ],
           content: ListView(
             children: query.data.docs
-                .map(Sermon.map)
+                .map(Sermon.fromDocument)
                 .map((data) => ListTile(
                       leading: FadeInImage.memoryNetwork(
                         placeholder: kTransparentImage,

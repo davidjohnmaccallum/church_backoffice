@@ -1,5 +1,5 @@
 import 'package:church_backoffice/components/section.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:church_backoffice/models/Sermon.dart';
 import 'package:flutter/material.dart';
 
 import '../utils.dart';
@@ -30,16 +30,14 @@ class _SermonFormState extends State<SermonForm> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference collection = FirebaseFirestore.instance.collection('sermons');
-    Map<String, dynamic> record;
+    Sermon sermon;
     String errorMessage = "";
 
     onSubmit() {
       // TODO: Debounce
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
-        collection.add(record).then((value) {
-          print(value);
+        sermon.save().then((_) {
           if (widget.onClose != null) widget.onClose(widget.id);
         }).catchError((error) {
           setState(() {
@@ -49,8 +47,8 @@ class _SermonFormState extends State<SermonForm> {
       }
     }
 
-    return FutureBuilder<DocumentSnapshot>(
-      future: widget.id != null ? collection.doc(widget.id).get() : collection.doc().get(),
+    return FutureBuilder<Sermon>(
+      future: widget.id != null ? Sermon.get(widget.id) : Sermon(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -59,7 +57,7 @@ class _SermonFormState extends State<SermonForm> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          record = snapshot.data.data() ?? {};
+          sermon = snapshot.data;
           return Section(
             title: "Sermon",
             actions: [
@@ -77,23 +75,23 @@ class _SermonFormState extends State<SermonForm> {
                       style: TextStyle(color: Colors.red),
                     ),
                     TextFormField(
-                      initialValue: record['title'],
+                      initialValue: sermon.title,
                       decoration: InputDecoration(
                         labelText: 'Title',
                       ),
                       onSaved: (value) {
-                        record['title'] = value;
+                        sermon.title = value;
                       },
                       onFieldSubmitted: (_) => onSubmit(),
                       validator: notEmptyValidator,
                     ),
                     TextFormField(
-                      initialValue: record['description'],
+                      initialValue: sermon.description,
                       decoration: InputDecoration(
                         labelText: 'Description',
                       ),
                       onSaved: (value) {
-                        record['description'] = value;
+                        sermon.description = value;
                       },
                       onFieldSubmitted: (_) => onSubmit(),
                       validator: notEmptyValidator,
@@ -101,24 +99,23 @@ class _SermonFormState extends State<SermonForm> {
                       maxLines: 5,
                     ),
                     TextFormField(
-                      initialValue: record['author'],
+                      initialValue: sermon.author,
                       decoration: InputDecoration(
                         labelText: 'Author',
                       ),
                       onSaved: (value) {
-                        record['author'] = value;
+                        sermon.author = value;
                       },
                       onFieldSubmitted: (_) => onSubmit(),
                       validator: notEmptyValidator,
                     ),
                     TextFormField(
-                      initialValue: formatTimestamp(record['_date']),
+                      initialValue: formatDateTime(sermon.date),
                       decoration: InputDecoration(
                         labelText: 'Date',
                       ),
                       onSaved: (value) {
-                        DateTime dt = DateTime.parse(value);
-                        record['_date'] = Timestamp.fromDate(dt);
+                        sermon.date = DateTime.parse(value);
                       },
                       onFieldSubmitted: (_) => onSubmit(),
                       validator: (value) {
@@ -131,34 +128,34 @@ class _SermonFormState extends State<SermonForm> {
                       },
                     ),
                     TextFormField(
-                      initialValue: record['imageUrl'],
+                      initialValue: sermon.imageUrl,
                       decoration: InputDecoration(
                         labelText: 'Image',
                       ),
                       onSaved: (value) {
-                        record['imageUrl'] = value;
+                        sermon.imageUrl = value;
                       },
                       onFieldSubmitted: (_) => onSubmit(),
                       validator: notEmptyValidator,
                     ),
                     TextFormField(
-                      initialValue: record['thumbnailUrl'],
+                      initialValue: sermon.thumbnailUrl,
                       decoration: InputDecoration(
                         labelText: 'Thumbnail Image',
                       ),
                       onSaved: (value) {
-                        record['thumbnailUrl'] = value;
+                        sermon.thumbnailUrl = value;
                       },
                       onFieldSubmitted: (_) => onSubmit(),
                       validator: notEmptyValidator,
                     ),
                     TextFormField(
-                      initialValue: record['mediaUrl'],
+                      initialValue: sermon.mediaUrl,
                       decoration: InputDecoration(
                         labelText: 'Media',
                       ),
                       onSaved: (value) {
-                        record['mediaUrl'] = value;
+                        sermon.mediaUrl = value;
                       },
                       onFieldSubmitted: (_) => onSubmit(),
                       validator: notEmptyValidator,

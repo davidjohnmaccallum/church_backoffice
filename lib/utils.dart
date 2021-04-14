@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-DateTime parseTimestamp(t) {
+DateTime parseTimestamp(Timestamp t) {
   if (t == null) return null;
   if (t is! Timestamp) return null;
   return t.toDate();
 }
 
-String formatTimestamp(t) {
-  DateTime dt = parseTimestamp(t);
+String formatDateTime(DateTime dt) {
   if (dt == null) return null;
-  return DateFormat.yMMMd().format(dt);
+  return DateFormat('yyyy-MM-dd').format(dt);
 }

@@ -1,5 +1,5 @@
 import 'package:church_backoffice/components/section.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:church_backoffice/models/Sermon.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -48,10 +48,8 @@ class _SermonDetailState extends State<SermonDetail> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference collection = FirebaseFirestore.instance.collection('sermons');
-
-    return FutureBuilder<DocumentSnapshot>(
-      future: collection.doc(widget.id).get(),
+    return FutureBuilder<Sermon>(
+      future: Sermon.get(widget.id),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -60,7 +58,7 @@ class _SermonDetailState extends State<SermonDetail> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          var data = snapshot.data.data();
+          Sermon sermon = snapshot.data;
           return Section(
             title: "Sermon",
             actions: [
@@ -79,39 +77,39 @@ class _SermonDetailState extends State<SermonDetail> {
                         "assets/images/image_placeholder.png",
                       ),
                       image: NetworkImage(
-                        data['imageUrl'] ?? "",
+                        sermon.imageUrl ?? "",
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        data['title'] ?? "Title not set",
+                        sermon.title ?? "Title not set",
                         style: Theme.of(context).textTheme.headline3,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(formatTimestamp(data['_date']) ?? "Date not set"),
+                      child: Text(formatDateTime(sermon.date) ?? "Date not set"),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(data['author'] != null ? "By ${data['author']}" : "Author not set"),
+                      child: Text(sermon.author != null ? "By ${sermon.author}" : "Author not set"),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(data['description'] ?? "Description not set"),
+                      child: Text(sermon.description ?? "Description not set"),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: makeLinkText("Main image", data['imageUrl']) ?? Text("Main image not set"),
+                      child: makeLinkText("Main image", sermon.imageUrl) ?? Text("Main image not set"),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: makeLinkText("Thumbnail image", data['thumbnailUrl']) ?? Text("Thumbnail image not set"),
+                      child: makeLinkText("Thumbnail image", sermon.thumbnailUrl) ?? Text("Thumbnail image not set"),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: makeLinkText("Media", data['mediaUrl']) ?? Text("Media not set"),
+                      child: makeLinkText("Media", sermon.mediaUrl) ?? Text("Media not set"),
                     ),
                   ],
                 ),

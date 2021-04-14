@@ -17,7 +17,7 @@ class Sermon {
     return collection.snapshots();
   }
 
-  static Function map = (QueryDocumentSnapshot doc) {
+  static Sermon Function(DocumentSnapshot) fromDocument = (DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data();
     Sermon result = new Sermon();
     result.id = doc.id;
@@ -30,4 +30,32 @@ class Sermon {
     result.thumbnailUrl = data['thumbnailUrl'];
     return result;
   };
+
+  static Map<String, dynamic> _toDocument(Sermon sermon) {
+    Map<String, dynamic> result = Map<String, dynamic>();
+    result['id'] = sermon.id;
+    result['_date'] = Timestamp.fromDate(sermon.date);
+    result['title'] = sermon.title;
+    result['author'] = sermon.author;
+    result['description'] = sermon.description;
+    result['imageUrl'] = sermon.imageUrl;
+    result['mediaUrl'] = sermon.mediaUrl;
+    result['thumbnailUrl'] = sermon.thumbnailUrl;
+    return result;
+  }
+
+  static Future<Sermon> get(String id) async {
+    CollectionReference collection = FirebaseFirestore.instance.collection('sermons');
+    DocumentSnapshot snapshot = await collection.doc(id).get();
+    return fromDocument(snapshot);
+  }
+
+  Future<void> save() async {
+    CollectionReference collection = FirebaseFirestore.instance.collection('sermons');
+    if (this.id != null) {
+      await collection.doc(this.id).set(_toDocument(this));
+    } else {
+      await collection.add(_toDocument(this));
+    }
+  }
 }
